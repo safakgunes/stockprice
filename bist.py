@@ -21,7 +21,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 
-
 param_dic = {
     "host"      : "ec2-3-209-124-113.compute-1.amazonaws.com",
     "database"  : "dcs8s0fsmecsqp",

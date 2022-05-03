@@ -9,42 +9,29 @@ import pandas as pd
 import plotly.graph_objects as go
 import bist
 
-st.header("BIST30 - ŞAFAK GÜNEŞ")
+st.header("BIST30")
 st.image("stocks.jpg")
+
 st.subheader("Keşifsel Veri analizi")
 st.write("---")
 st.sidebar.title("Stock Symbols")
-
+ 
+#stockname= tuple(pd.read_csv('stocks.csv')["Name"].to_list())
 symbols = tuple(pd.read_csv('stocks.csv')["Symbol"].to_list())
 symbol = st.sidebar.selectbox(label="Select stock symbol", options=symbols)
 
-    
+
+
 if symbol:
     df = bist.runAll(symbol)
     st.write(df)
     fig = go.Figure(data=[go.Candlestick(x=df['Market_date'], open=df['Open Price ₺'], high=df['High Price ₺'], low=df['Low Price ₺'], close=df['Close Price ₺'])])
     st.plotly_chart(fig)
 
-# with st.form('Indicator_form'):
-#     Indicator = st.selectbox(label="Select stock symbol", options=('C','RSI','BB','20d_MA'))
-#     Indicator_Type = st.form_submit_button("Indicator")
 
-#    if Indicator_Type:
-#        st.write(Indicator)
-#        if Indicator =="RSI":
-#            st.write("RRR")
-#            fig = px.line(df, x='Market_date', y='RSI', title='RSI Indicator')
-#            st.plotly_chart(fig)
-#        elif Indicator =="BB":
-        #     st.write("BBB")
-        # elif Indicator =="MA":
-        #     st.write("MMM")
-        # else:
-        #     st.write("CCC")
 st.subheader("Teknik İndikatörler")
 st.write("---")
 fig = px.line(df, x='Market_date', y=["RSI","20d_MA", "bb_bbh", "bb_bbl"])
-#title='Indicator'
 st.plotly_chart(fig)
 
 
