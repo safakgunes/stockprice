@@ -9,7 +9,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import bist
 
-st.header("BIST ")
+st.header("BIST30 - ŞAFAK GÜNEŞ - 170208015")
 st.image("stocks.jpg")
 st.subheader("Keşifsel Veri analizi")
 st.write("---")
