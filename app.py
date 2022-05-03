@@ -9,6 +9,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import bist
 
+st.beta_set_page_title("borsa istanbul analiz")
+
 st.header("BIST30")
 st.image("stocks.jpg")
 
