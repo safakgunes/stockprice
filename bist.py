@@ -23,9 +23,9 @@ from sklearn.preprocessing import StandardScaler
 
 
 param_dic = {
-    "host"      : "localhost",
-    "database"  : "stockmarket",
-    "user"      : "postgres",
+    "host"      : "ec2-3-209-124-113.compute-1.amazonaws.com",
+    "database"  : "dcs8s0fsmecsqp",
+    "user"      : "aiapaubuaoetmn",
     "password"  : db_pass
 }
 
