@@ -51,7 +51,7 @@ def getStockApi(symbol):
 
     url = "https://stock-market-data.p.rapidapi.com/yfinance/historical-prices"
 
-    querystring = {"ticker_symbol":symbol,"format":"json","years":"15"}
+    querystring = {"ticker_symbol":symbol,"format":"json","years":"5"}
 
     headers = {
     "X-RapidAPI-Host": "stock-market-data.p.rapidapi.com",
