@@ -25,7 +25,7 @@ symbol = st.sidebar.selectbox(label="Select stock symbol", options=symbols)
 
 if symbol:
     df = bist.runAll(symbol)
-    st.write(df)
+    st.write(df.sort_values(by="Market_date",ascending=False))
     fig = go.Figure(data=[go.Candlestick(x=df['Market_date'], open=df['Open Price ₺'], high=df['High Price ₺'], low=df['Low Price ₺'], close=df['Close Price ₺'])])
     st.plotly_chart(fig)
 
