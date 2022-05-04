@@ -69,7 +69,7 @@ def getStockData(response):
     year = []
     # Loop through the json file, 1000 is chosen because no 1 year data is going to reach this length. Exit try-except
     #once 366 rounds are finsihed
-    for i in range(3000):
+    for i in range(10000):
                     try:
                         date = response["historical prices"][i]['Date']
                         year.append(date)
