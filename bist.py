@@ -49,16 +49,17 @@ def getStockApi(symbol):
     # API request to pull data
     # To create an API_key, please create an account @https://rapidapi.com/apidojo/api/yahoo-finance1/
 
-    url = "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data"
+    url = "https://stock-market-data.p.rapidapi.com/yfinance/historical-prices"
 
-    querystring = {"symbol":symbol,"region":"TR"}
+    querystring = {"ticker_symbol":"AAPL","format":"json","years":"15"}
 
     headers = {
-        'x-rapidapi-key': API_key,
-        'x-rapidapi-host': "apidojo-yahoo-finance-v1.p.rapidapi.com"
-        }
+    "X-RapidAPI-Host": "stock-market-data.p.rapidapi.com",
+    "X-RapidAPI-Key": "a38dc9624dmsh3c38604ebd86971p1e75ebjsnc78d4ac281cc"
+    }
 
     response = requests.request("GET", url, headers=headers, params=querystring).json()
+
     return response
 
 def getStockData(response):
@@ -70,7 +71,7 @@ def getStockData(response):
     #once 366 rounds are finsihed
     for i in range(366):
                     try:
-                        date = response["prices"][i]['date']
+                        date = response["historical prices"][i]['Date']
                         year.append(date)
                     except:
                         sys.exit
@@ -94,7 +95,7 @@ def getStockData(response):
                         
             try:   
                 #Get the date and append the date to a list
-                date = response["prices"][i]['date']
+                date = response["historical prices"][i]['Date']
                 Date.append(date)
             except:            
                 #Add null when no date is found
@@ -103,7 +104,7 @@ def getStockData(response):
         
             try:
                 #Get the open price and append the price to a list
-                open_price = response["prices"][i]['open']
+                open_price = response["historical prices"][i]['open']
                 OpenPrice.append(open_price)
             except: 
                 #Add null when no open_price is found
@@ -112,7 +113,7 @@ def getStockData(response):
 
             try:  
                 #Get the high price and append the price to a list
-                high_price = response["prices"][i]['high']
+                high_price = response["historical prices"][i]['High']
                 HighPrice.append(high_price)
             except:
                 #Add null when no high_price is found
@@ -121,7 +122,7 @@ def getStockData(response):
                 
             try:
                 #Get the low price and append the price to a list
-                low_price = response["prices"][i]['low']
+                low_price = response["historical prices"][i]['Low']
                 LowPrice.append(low_price)
             except:   
                 #Add null when no low_price is found
@@ -130,7 +131,7 @@ def getStockData(response):
                 
             try:
                 #Get the close price and append the price to a list
-                close_price = response["prices"][i]['close']
+                close_price = response["historical prices"][i]['Close']
                 ClosePrice.append(close_price)  
             except:
                 #Add null when no close_price is found
@@ -139,7 +140,7 @@ def getStockData(response):
                 
             try:
                 #Get the volume of transactions and append the price to a list
-                volume = response["prices"][i]['volume']
+                volume = response["historical prices"][i]['Volume']
                 VolumeTransactions.append(volume)        
             except:
                 #Add null when no volume is found
@@ -148,7 +149,7 @@ def getStockData(response):
                 
             try:
                 #Get the adjPrice and append the price to a list
-                adj_Price = response["prices"][i]['adjclose']
+                adj_Price = response["historical prices"][i]['Adj Close']
                 adjPrice.append(adj_Price)
             except:
                 #Add null when no adj_Price is found
@@ -160,7 +161,7 @@ def getStockData(response):
     DF= pd.DataFrame({'Market_Date': Date,'Open Price ₺': OpenPrice,'High Price ₺':HighPrice,'Low Price ₺': LowPrice,'Close Price ₺': ClosePrice,'Volume':VolumeTransactions,"Adjusted Close Price ₺":adjPrice})
 
     #Change all unix dates to regular dates
-    DF['Market_Date'] = pd.to_datetime(DF['Market_Date'], unit='s', origin='unix').dt.date
+    DF['Market_Date'] = pd.to_datetime(DF['Market_Date'], format='%Y-%m-%d %H:%M:%S.%f').dt.date
 
     # #Check for Null values
     # DF.isnull().sum()
