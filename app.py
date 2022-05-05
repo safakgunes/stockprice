@@ -30,10 +30,6 @@ if symbol:
     st.plotly_chart(fig)
 
 
-st.subheader("Teknik İndikatörler")
-st.write("---")
-fig = px.line(df, x='Market_date', y=["RSI","20d_MA", "bb_bbh", "bb_bbl"])
-st.plotly_chart(fig)
 
 
 st.subheader("Fiyat Tahmini")
