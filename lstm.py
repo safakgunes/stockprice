@@ -37,7 +37,7 @@ def lstm(symbol) :
     model.add(TimeDistributed(Dense(X_train.shape[2])))
     model.compile(optimizer='adam', loss='mae')
     model.summary()
-    history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_split=0.1,
+    history = model.fit(X_train, y_train, epochs=100, batch_size=16, validation_split=0.1,
                         callbacks=[keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min')], shuffle=False)
     model.evaluate(X_test, y_test)
     X_train_pred = model.predict(X_train, verbose=0)
