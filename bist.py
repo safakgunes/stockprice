@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import datetime
 
-from ta.volatility import BollingerBands
 from os import environ
 from sqlalchemy import create_engine
 import getpass
