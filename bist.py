@@ -158,7 +158,7 @@ def getStockData(response):
     #Change all unix dates to regular dates
     DF['Market_Date'] = pd.to_datetime(DF['Market_Date'], format='%Y-%m-%d %H:%M:%S.%f').dt.date
 
-    # #Check for Null values
+    # #Check for Null valuesdf_join
     # DF.isnull().sum()
 
     #Drop Null values if they exist and save them to a new data frame. Change index to Market_date to help join in SQL
