@@ -8,6 +8,7 @@ from config import db_pass
 import numpy as np
 import pandas as pd
 import datetime
+
 from os import environ
 from sqlalchemy import create_engine
 import getpass
@@ -44,13 +45,14 @@ def getStockApi(symbol):
     # API request to pull data
     # To create an API_key, please create an account @https://rapidapi.com/apidojo/api/yahoo-finance1/
 
+   
     url = "https://stock-market-data.p.rapidapi.com/yfinance/historical-prices"
 
-    querystring = {"ticker_symbol":symbol,"format":"json","years":"5"}
+    querystring = {"ticker_symbol":symbol,"format":"json","years":"15"}
 
     headers = {
     "X-RapidAPI-Host": "stock-market-data.p.rapidapi.com",
-    "X-RapidAPI-Key": "a38dc9624dmsh3c38604ebd86971p1e75ebjsnc78d4ac281cc"
+    "X-RapidAPI-Key": "aa70fdf8f0msh474593534930e2dp105fbdjsnee86c27f3919"
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring).json()
@@ -158,7 +160,7 @@ def getStockData(response):
     #Change all unix dates to regular dates
     DF['Market_Date'] = pd.to_datetime(DF['Market_Date'], format='%Y-%m-%d %H:%M:%S.%f').dt.date
 
-    # #Check for Null valuesdf_join
+    # #Check for Null values
     # DF.isnull().sum()
 
     #Drop Null values if they exist and save them to a new data frame. Change index to Market_date to help join in SQL
@@ -173,7 +175,7 @@ def save2DB(symbol, stock_df):
     stock_df.to_sql('stock_data_'+symbol, con=engine,index=True, if_exists='replace',method='multi')
     # Export BB_df and store it in postgres sql, each stock will have it is own BB_df
     # Joining two data tables in Postgres using Pandas
-    print('saved')
+    print('veriler güncellendi')
 
 def getDataFromDB(symbol):
     #result_set is a join of the stock_df and BB_df on Market_date column.
@@ -184,7 +186,6 @@ def getDataFromDB(symbol):
 
     # print(stock_df.values)
     return df_join
-
 
 
 # # Machine Learning
@@ -221,4 +222,6 @@ def predictPrice(model, Open_price, High_price,  Low_price, Volume):
 def train_and_predict(stock_df, Open_price, High_price,  Low_price, Volume):
     model = trainModel(stock_df)
     return predictPrice(model, Open_price, High_price,  Low_price, Volume)
+
+
 
