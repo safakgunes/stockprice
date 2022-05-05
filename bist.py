@@ -52,7 +52,7 @@ def getStockApi(symbol):
 
     headers = {
     "X-RapidAPI-Host": "stock-market-data.p.rapidapi.com",
-    "X-RapidAPI-Key": "06880d4036mshab2f5e2e0414beap1c47e9jsn5ae7de0ade25"
+    "X-RapidAPI-Key": "754ffb62camshde20739c3ad037ap13a3c9jsn937095a4c4a9"
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring).json()
