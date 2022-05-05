@@ -8,9 +8,7 @@ from config import db_pass
 import numpy as np
 import pandas as pd
 import datetime
-import ta
-from ta import add_all_ta_features
-from ta.utils import dropna
+
 from ta.volatility import BollingerBands
 from os import environ
 from sqlalchemy import create_engine
@@ -41,21 +39,21 @@ engine = create_engine(connect)
 def runAll(symbol):
     response = getStockApi(symbol)
     stock_df = getStockData(response)
-    BB_df = createIndicators(stock_df)
-    save2DB(symbol, stock_df, BB_df)
-    return getDataWithIndicator(symbol)
+    save2DB(symbol, stock_df)
+    return getDataFromDB(symbol)
 
 def getStockApi(symbol):
     # API request to pull data
     # To create an API_key, please create an account @https://rapidapi.com/apidojo/api/yahoo-finance1/
 
+   
     url = "https://stock-market-data.p.rapidapi.com/yfinance/historical-prices"
 
-    querystring = {"ticker_symbol":symbol,"format":"json","years":"5"}
+    querystring = {"ticker_symbol":symbol,"format":"json","years":"15"}
 
     headers = {
     "X-RapidAPI-Host": "stock-market-data.p.rapidapi.com",
-    "X-RapidAPI-Key": "a38dc9624dmsh3c38604ebd86971p1e75ebjsnc78d4ac281cc"
+    "X-RapidAPI-Key": "aa70fdf8f0msh474593534930e2dp105fbdjsnee86c27f3919"
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring).json()
@@ -172,76 +170,24 @@ def getStockData(response):
 
     return stock_df
 
-def createIndicators(stock_df):
-    # Bollinger Bands Indicator
-    #Code to create the bollinger bands
-    # Initialize Bollinger Bands Indicator
-    BB_df = pd.DataFrame()
-    indicator_bb = BollingerBands(close=stock_df["Adjusted Close Price ₺"], window=20, window_dev=2)
-    BB_df['Adjusted Close Price ₺_m'] = indicator_bb.bollinger_mavg()
-    BB_df['bb_bbh'] = indicator_bb.bollinger_hband()
-    BB_df['bb_bbl'] = indicator_bb.bollinger_lband()
-    pd.set_option("display.max_rows", None, "display.max_columns", None)
-    # Add Bollinger Band high indicator
-    BB_df['bb_bbhi'] = indicator_bb.bollinger_hband_indicator()
 
-    # Add Bollinger Band low indicator
-    BB_df['bb_bbli'] = indicator_bb.bollinger_lband_indicator()
-
-    # Add Width Size Bollinger Bands
-    BB_df['bb_bbw'] = indicator_bb.bollinger_wband()
-
-    # Add Percentage Bollinger Bands
-    BB_df['bb_bbp'] = indicator_bb.bollinger_pband()
-
-    # # Relative Strength Index
-
-    # code to calculate RSI indicator add to the stock_df 
-    
-    warnings.filterwarnings("ignore")
-    RSI = ta.momentum.RSIIndicator(close=stock_df["Adjusted Close Price ₺"], window=20, fillna= False)
-    stock_df['RSI'] = RSI.rsi()
-
-    # # Moving Average
-
-    #20 day moving average, add it to the stock_df 
-    stock_df['20d_MA'] = stock_df["Adjusted Close Price ₺"].rolling(20).mean()
-    stock_df['20d_MA']
-
-    # # Data transition to Postgres SQL Database
-    # Passw0rd = getpass.getpass(prompt='Password: ', stream=None) 
-    # Here you want to change your database, username & password according to your own values  
-    return stock_df
-
-def save2DB(symbol, stock_df, BB_df):
+def save2DB(symbol, stock_df):
     # Export stock_df and store it in postgres sql, each stock will have it is own stock_df
     stock_df.to_sql('stock_data_'+symbol, con=engine,index=True, if_exists='replace',method='multi')
     # Export BB_df and store it in postgres sql, each stock will have it is own BB_df
-    BB_df.to_sql('bollinger_bands_'+symbol, con=engine,index=True, if_exists='replace',method='multi')
     # Joining two data tables in Postgres using Pandas
-    print('saved')
+    print('veriler güncellendi')
 
 def getDataFromDB(symbol):
     #result_set is a join of the stock_df and BB_df on Market_date column.
     result_set = engine.execute('select * from "stock_data_'+symbol+'"')
     #df_join is a dataframe established from result_set
     df_join = pd.DataFrame(result_set)
-    df_join.columns = ['Market_date', 'Open Price ₺', 'High Price ₺','Low Price ₺', 'Close Price ₺', 'Volume','Adjusted Close Price ₺', '1','2']
+    df_join.columns = ['Market_date', 'Open Price ₺', 'High Price ₺','Low Price ₺', 'Close Price ₺', 'Volume','Adjusted Close Price ₺']
 
     # print(stock_df.values)
     return df_join
 
-
-def getDataWithIndicator(symbol):
-    #result_set is a join of the stock_df and BB_df on Market_date column.
-    print('select * from "stock_data_'+symbol+'" inner join "bollinger_bands_'+symbol+'" using ("Market_Date")')
-    result_set = engine.execute('select * from "stock_data_'+symbol+'" inner join "bollinger_bands_'+symbol+'" using ("Market_Date")')
-    #df_join is a dataframe established from result_set
-    df_join = pd.DataFrame(result_set)
-    df_join.columns = ['Market_date', 'Open Price ₺', 'High Price ₺','Low Price ₺', 'Close Price ₺', 'Volume','Adjusted Close Price ₺','RSI', '20d_MA','Adjusted Close Price ₺_m', 'bb_bbh','bb_bbl', 'bb_bbhi', 'bb_bbli','bb_bbw', 'bb_bbp', '']
-
-    # print(stock_df.values)
-    return df_join
 
 # # Machine Learning
 #Linear Regression Machine Learning
@@ -277,4 +223,6 @@ def predictPrice(model, Open_price, High_price,  Low_price, Volume):
 def train_and_predict(stock_df, Open_price, High_price,  Low_price, Volume):
     model = trainModel(stock_df)
     return predictPrice(model, Open_price, High_price,  Low_price, Volume)
+
+
 
