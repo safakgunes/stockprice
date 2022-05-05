@@ -215,7 +215,6 @@ def trainModel(stock_df):
 def predictPrice(model, Open_price, High_price,  Low_price, Volume):
     X_pred = [Open_price,High_price, Low_price, Volume]
     X_pred = np.array(X_pred).reshape(1,4)
-    X_pred
     y_pred = model.predict(X_pred)
     return y_pred
 

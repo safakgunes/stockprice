@@ -1,10 +1,8 @@
 pandas
 numpy
 streamlit
-ta==0.7.0
-yfinance==0.1.63
 scikit-learn
-plotly==5.1.0
+plotly
 requests
 sqlalchemy
 psycopg2
