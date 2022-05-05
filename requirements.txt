@@ -8,4 +8,4 @@ plotly==5.1.0
 requests
 sqlalchemy
 psycopg2
-tensorflow
+tensorflow-cpu
