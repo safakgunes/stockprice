@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from matplotlib.pyplot import xlabel
 import streamlit as st
 import plotly.express as px
 import pandas as pd
